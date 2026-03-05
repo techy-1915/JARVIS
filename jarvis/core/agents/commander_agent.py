@@ -30,7 +30,7 @@ class CommanderAgent(AgentBase):
         super().__init__(name="Commander", description="Top-level request coordinator")
         self._brain = brain
         self._bus = message_bus
-        self._context: List[Dict[str, Any]] = []
+        self._context: List[Dict[str, Any]] = [{"role": "system", "content": SYSTEM_PROMPT}]
 
     async def run(self, task: Dict[str, Any]) -> Dict[str, Any]:
         """Process an incoming user request.
@@ -44,8 +44,6 @@ class CommanderAgent(AgentBase):
         user_input: str = task.get("input", "")
         if not user_input:
             return self._error("No input provided")
-
-        self._context.append({"role": "system", "content": SYSTEM_PROMPT})
         try:
             response = await self._brain.think(user_input, self._context)
             self._context.append({"role": "assistant", "content": response})
