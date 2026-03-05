@@ -15,7 +15,7 @@ class TestTextInputProcessor:
         assert result["text"] == "Hello JARVIS"
         assert result["session_id"] == "default"
 
-    def test_whitespace_normalisation(self):
+    def test_whitespace_normalization(self):
         result = self.proc.process("  hello   world  ")
         assert result["text"] == "hello world"
 
@@ -64,7 +64,7 @@ class TestInputNormalizer:
     def setup_method(self):
         self.norm = InputNormalizer(wake_phrase="hey jarvis")
 
-    def test_basic_normalisation(self):
+    def test_basic_normalization(self):
         result = self.norm.normalize("Hello!")
         assert result["text"] == "Hello!"
         assert result["source"] == "chat"

@@ -39,7 +39,7 @@ class Message:
         self.timestamp: datetime = datetime.now(timezone.utc)
 
     def to_dict(self) -> Dict[str, Any]:
-        """Serialise the message to a dictionary."""
+        """Serialize the message to a dictionary."""
         return {
             "id": self.id,
             "type": self.message_type.value,

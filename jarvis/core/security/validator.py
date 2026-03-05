@@ -1,4 +1,4 @@
-"""Command validator – sanitises and validates all incoming commands."""
+"""Command validator – sanitizes and validates all incoming commands."""
 
 import logging
 import re
@@ -29,7 +29,7 @@ class CommandValidator:
     """
 
     def validate(self, command: str) -> str:
-        """Validate and sanitise a command string.
+        """Validate and sanitize a command string.
 
         Args:
             command: The raw command or user input.

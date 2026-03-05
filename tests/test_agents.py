@@ -34,7 +34,7 @@ class TestAgentBase:
 
     def test_run_returns_success(self):
         agent = ConcreteAgent("TestAgent")
-        result = asyncio.get_event_loop().run_until_complete(agent.run({"input": "hello"}))
+        result = asyncio.run(agent.run({"input": "hello"}))
         assert result["status"] == "success"
 
 
@@ -49,14 +49,14 @@ class TestMessageBus:
         bus.subscribe(MessageType.COMMAND, handler)
         msg = Message(MessageType.COMMAND, "test_sender", {"data": "hello"})
 
-        asyncio.get_event_loop().run_until_complete(bus.publish(msg))
+        asyncio.run(bus.publish(msg))
         assert len(received) == 1
         assert received[0].payload["data"] == "hello"
 
     def test_history_recorded(self):
         bus = MessageBus()
         msg = Message(MessageType.EVENT, "agent1", {"key": "value"})
-        asyncio.get_event_loop().run_until_complete(bus.publish(msg))
+        asyncio.run(bus.publish(msg))
         history = bus.get_history()
         assert len(history) >= 1
 
@@ -70,5 +70,5 @@ class TestMessageBus:
         bus.subscribe(MessageType.QUERY, handler)
         bus.unsubscribe(MessageType.QUERY, handler)
         msg = Message(MessageType.QUERY, "sender", {})
-        asyncio.get_event_loop().run_until_complete(bus.publish(msg))
+        asyncio.run(bus.publish(msg))
         assert len(calls) == 0

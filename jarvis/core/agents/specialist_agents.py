@@ -10,7 +10,7 @@ logger = logging.getLogger(__name__)
 
 
 class ResearchAgent(AgentBase):
-    """Conducts research and synthesises information."""
+    """Conducts research and synthesizes information."""
 
     def __init__(self, brain: BrainInterface) -> None:
         super().__init__(name="Research", description="Research and information synthesis")

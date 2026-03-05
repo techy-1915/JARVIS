@@ -66,7 +66,7 @@ class TestPermissionManager:
 
 class TestAuthManager:
     def setup_method(self):
-        self.auth = AuthManager(secret="test-secret-key-for-testing")
+        self.auth = AuthManager(secret="test-secret-key-for-testing-long-enough")
 
     def test_create_and_verify_token(self):
         try:

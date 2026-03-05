@@ -20,7 +20,7 @@ class DocumentProcessorTool(ToolBase):
         return {
             "name": "document_processor",
             "parameters": {
-                "action": {"type": "string", "enum": ["read", "summarise", "extract_text"]},
+                "action": {"type": "string", "enum": ["read", "summarize", "extract_text"]},
                 "path": {"type": "string"},
             },
             "required": ["action", "path"],
