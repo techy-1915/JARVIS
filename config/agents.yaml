@@ -1,0 +1,35 @@
+# JARVIS Agent Configuration
+
+agents:
+  commander:
+    enabled: true
+    max_context_messages: 20
+
+  planner:
+    enabled: true
+    max_steps: 10
+
+  reasoning:
+    enabled: true
+
+  specialist:
+    research:
+      enabled: true
+    coding:
+      enabled: true
+      default_language: "Python"
+    data_processing:
+      enabled: true
+    content_generation:
+      enabled: true
+
+  tool:
+    browser:
+      enabled: true
+    file:
+      enabled: true
+    search:
+      enabled: true
+
+message_bus:
+  max_history: 1000

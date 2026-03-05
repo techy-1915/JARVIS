@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>JARVIS Dashboard</title>
+  <style>
+    :root {
+      --bg: #0d1117;
+      --surface: #161b22;
+      --border: #30363d;
+      --accent: #58a6ff;
+      --green: #3fb950;
+      --red: #f85149;
+      --text: #e6edf3;
+      --muted: #8b949e;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Segoe UI', system-ui, sans-serif;
+      min-height: 100vh;
+    }
+    header {
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      padding: 1rem 2rem;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+    header h1 { font-size: 1.5rem; color: var(--accent); }
+    #status-dot {
+      width: 10px; height: 10px;
+      border-radius: 50%;
+      background: var(--red);
+    }
+    #status-dot.online { background: var(--green); }
+    main {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      grid-template-rows: auto auto;
+      gap: 1rem;
+      padding: 1.5rem;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 1rem;
+    }
+    .card h2 {
+      color: var(--accent);
+      font-size: 0.9rem;
+      text-transform: uppercase;
+      letter-spacing: .05em;
+      margin-bottom: .75rem;
+    }
+    #chat-card { grid-column: 1 / -1; }
+    #chat-log {
+      height: 300px;
+      overflow-y: auto;
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      padding: .75rem;
+      font-size: .875rem;
+      margin-bottom: .75rem;
+      background: var(--bg);
+    }
+    .msg { margin-bottom: .5rem; }
+    .msg.user { color: var(--accent); }
+    .msg.assistant { color: var(--text); }
+    .msg.system { color: var(--muted); font-style: italic; }
+    #chat-input-row { display: flex; gap: .5rem; }
+    #chat-input {
+      flex: 1;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      color: var(--text);
+      padding: .5rem .75rem;
+      font-size: .875rem;
+    }
+    button {
+      background: var(--accent);
+      color: var(--bg);
+      border: none;
+      border-radius: 4px;
+      padding: .5rem 1rem;
+      cursor: pointer;
+      font-weight: 600;
+    }
+    button:hover { opacity: .85; }
+    #log-list, #agent-list {
+      font-size: .8rem;
+      color: var(--muted);
+      max-height: 180px;
+      overflow-y: auto;
+    }
+    #log-list li, #agent-list li {
+      padding: .2rem 0;
+      border-bottom: 1px solid var(--border);
+    }
+    #ws-status { font-size: .75rem; color: var(--muted); margin-left: auto; }
+  </style>
+</head>
+<body>
+  <header>
+    <div id="status-dot"></div>
+    <h1>JARVIS</h1>
+    <span id="ws-status">WebSocket: disconnected</span>
+  </header>
+
+  <main>
+    <!-- Chat -->
+    <div class="card" id="chat-card">
+      <h2>💬 Chat</h2>
+      <div id="chat-log"></div>
+      <div id="chat-input-row">
+        <input id="chat-input" type="text" placeholder="Ask JARVIS something…" autocomplete="off" />
+        <button id="send-btn">Send</button>
+      </div>
+    </div>
+
+    <!-- System Status -->
+    <div class="card">
+      <h2>⚡ System Status</h2>
+      <div id="sys-info">
+        <p>API: <span id="api-status" style="color:var(--muted)">checking…</span></p>
+        <p>Model: <span id="model-status" style="color:var(--muted)">unknown</span></p>
+        <p>Version: <span id="version">—</span></p>
+      </div>
+    </div>
+
+    <!-- Event Log -->
+    <div class="card">
+      <h2>📋 Event Log</h2>
+      <ul id="log-list"></ul>
+    </div>
+  </main>
+
+  <script>
+    const API = window.location.origin.replace(/:\d+$/, ':8000');
+    const chatLog = document.getElementById('chat-log');
+    const chatInput = document.getElementById('chat-input');
+    const logList = document.getElementById('log-list');
+    const statusDot = document.getElementById('status-dot');
+    const wsStatusEl = document.getElementById('ws-status');
+
+    function addMsg(role, text) {
+      const div = document.createElement('div');
+      div.className = `msg ${role}`;
+      div.textContent = `[${role.toUpperCase()}] ${text}`;
+      chatLog.appendChild(div);
+      chatLog.scrollTop = chatLog.scrollHeight;
+    }
+
+    function addLog(text) {
+      const li = document.createElement('li');
+      li.textContent = `${new Date().toLocaleTimeString()} – ${text}`;
+      logList.prepend(li);
+      if (logList.children.length > 50) logList.lastChild.remove();
+    }
+
+    async function sendMessage() {
+      const msg = chatInput.value.trim();
+      if (!msg) return;
+      chatInput.value = '';
+      addMsg('user', msg);
+      try {
+        const res = await fetch(`${API}/chat/`, {
+          method: 'POST',
+          headers: {'Content-Type': 'application/json'},
+          body: JSON.stringify({message: msg})
+        });
+        const data = await res.json();
+        addMsg('assistant', data.response || data.detail || 'No response');
+        addLog(`Chat: "${msg.slice(0, 40)}…"`);
+      } catch (e) {
+        addMsg('system', `Error: ${e.message}`);
+      }
+    }
+
+    document.getElementById('send-btn').addEventListener('click', sendMessage);
+    chatInput.addEventListener('keydown', e => { if (e.key === 'Enter') sendMessage(); });
+
+    // API status check
+    async function checkStatus() {
+      try {
+        const res = await fetch(`${API}/status/`);
+        const data = await res.json();
+        document.getElementById('api-status').textContent = data.status;
+        document.getElementById('api-status').style.color = 'var(--green)';
+        document.getElementById('version').textContent = data.service || '—';
+        statusDot.classList.add('online');
+        addLog('API online');
+      } catch {
+        document.getElementById('api-status').textContent = 'offline';
+        document.getElementById('api-status').style.color = 'var(--red)';
+      }
+    }
+    checkStatus();
+
+    // WebSocket
+    function connectWS() {
+      const wsUrl = API.replace('http', 'ws') + '/ws';
+      const ws = new WebSocket(wsUrl);
+      ws.onopen = () => {
+        wsStatusEl.textContent = 'WebSocket: connected';
+        wsStatusEl.style.color = 'var(--green)';
+        addLog('WebSocket connected');
+      };
+      ws.onmessage = e => {
+        const data = JSON.parse(e.data);
+        addLog(`WS: ${JSON.stringify(data).slice(0, 80)}`);
+      };
+      ws.onclose = () => {
+        wsStatusEl.textContent = 'WebSocket: disconnected';
+        wsStatusEl.style.color = 'var(--muted)';
+        setTimeout(connectWS, 3000);
+      };
+    }
+    connectWS();
+  </script>
+</body>
+</html>

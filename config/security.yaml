@@ -1,0 +1,35 @@
+# JARVIS Security Policies
+
+permissions:
+  default_granted:
+    - "file.read"
+    - "network.access"
+    - "memory.read"
+    - "memory.write"
+  require_confirmation:
+    - "file.delete"
+    - "system.exec"
+    - "browser.download"
+    - "memory.clear"
+
+validator:
+  blocked_patterns:
+    - "rm -rf /"
+    - "dd if="
+    - "mkfs"
+    - "shutdown"
+    - "reboot"
+  max_input_length: 10000
+
+sandbox:
+  timeout_seconds: 10
+  max_output_bytes: 65536
+
+encryption:
+  algorithm: "fernet"
+  key_derivation: "pbkdf2"
+  iterations: 480000
+
+api:
+  rate_limit_per_minute: 60
+  max_upload_mb: 25
