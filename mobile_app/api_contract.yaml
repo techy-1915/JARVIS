@@ -1,0 +1,83 @@
+# JARVIS Mobile API Contract
+# OpenAPI 3.0 subset for mobile integration
+
+openapi: "3.0.3"
+info:
+  title: JARVIS Mobile API
+  version: "0.1.0"
+
+servers:
+  - url: "http://localhost:8000"
+    description: Local development
+
+paths:
+  /chat/:
+    post:
+      summary: Send a chat message
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [message]
+              properties:
+                message: {type: string}
+                session_id: {type: string}
+                speak: {type: boolean, default: false}
+      responses:
+        "200":
+          description: Chat response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  response: {type: string}
+                  session_id: {type: string}
+                  spoken: {type: boolean}
+
+  /voice/transcribe:
+    post:
+      summary: Transcribe audio to text
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                audio:
+                  type: string
+                  format: binary
+      responses:
+        "200":
+          description: Transcription result
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  text: {type: string}
+                  available: {type: boolean}
+
+  /status/:
+    get:
+      summary: Health check
+      responses:
+        "200":
+          description: System status
+
+  /memory/get/{key}:
+    get:
+      summary: Retrieve memory value
+      parameters:
+        - name: key
+          in: path
+          required: true
+          schema: {type: string}
+      responses:
+        "200":
+          description: Memory value
+        "404":
+          description: Key not found

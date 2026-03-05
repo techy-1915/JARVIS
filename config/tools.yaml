@@ -1,0 +1,33 @@
+# JARVIS Tool Configuration
+
+tools:
+  browser:
+    driver: "selenium"          # "selenium" | "playwright"
+    headless: true
+    timeout: 30
+
+  file_manager:
+    base_dir: "."               # Files outside this dir are blocked
+    allowed_extensions:
+      - ".txt"
+      - ".md"
+      - ".json"
+      - ".yaml"
+      - ".py"
+      - ".csv"
+
+  web_search:
+    provider: "duckduckgo"
+    max_results: 5
+    timeout: 10
+
+  system_monitor:
+    interval_seconds: 5
+    metrics:
+      - cpu
+      - memory
+      - disk
+
+plugins:
+  directory: "plugins/"
+  auto_load: false
