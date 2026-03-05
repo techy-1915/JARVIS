@@ -1,0 +1,34 @@
+version: "3.9"
+
+services:
+  jarvis-api:
+    build: .
+    container_name: jarvis-api
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./jarvis/data:/app/jarvis/data
+      - ./jarvis/logs:/app/jarvis/logs
+      - ./config:/app/config
+    env_file:
+      - .env
+    environment:
+      - JARVIS_HOST=0.0.0.0
+      - JARVIS_PORT=8000
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/status/"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # Uncomment to add ChromaDB vector store
+  # chroma:
+  #   image: chromadb/chroma:latest
+  #   ports:
+  #     - "8001:8000"
+  #   volumes:
+  #     - chroma_data:/chroma/chroma
+
+# volumes:
+#   chroma_data:
