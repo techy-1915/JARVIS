@@ -36,7 +36,6 @@ export default function ChatInput({ onSend, disabled }) {
           ref={textareaRef}
           value={value}
           onInput={handleInput}
-          onChange={(e) => setValue(e.target.value)}
           onKeyDown={handleKeyDown}
           disabled={disabled}
           placeholder="Message JARVIS... (Enter to send, Shift+Enter for new line)"

@@ -4,7 +4,7 @@ A modern React-based chat interface for the JARVIS AI assistant.
 
 ## Tech Stack
 
-- **React 18** with functional components and hooks
+- **React 19** with functional components and hooks
 - **Vite** for fast builds and dev server
 - **Tailwind CSS** for styling
 - **react-markdown** + **remark-gfm** for Markdown rendering
