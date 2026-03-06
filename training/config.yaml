@@ -1,0 +1,37 @@
+# JARVIS Training Configuration
+# ---------------------------------
+# Settings for the dataset collection and fine-tuning pipeline.
+
+dataset:
+  base_dir: "datasets"
+  categories:
+    - conversations
+    - coding
+    - reasoning
+  # Minimum interactions before a dataset is considered ready for training
+  min_samples: 100
+  # How often to flush the in-memory buffer to disk (seconds)
+  flush_interval: 30
+
+training:
+  # Fine-tuning method: lora | full
+  method: lora
+  # Base model for JARVIS fine-tuning
+  base_model: "phi3"
+  # Output directory for fine-tuned model weights
+  output_dir: "models/jarvis-ft"
+  # Training hyperparameters
+  hyperparameters:
+    num_epochs: 3
+    batch_size: 4
+    learning_rate: 2.0e-4
+    max_length: 2048
+    lora_rank: 16
+    lora_alpha: 32
+    lora_dropout: 0.05
+
+export:
+  # Directory for exported datasets
+  output_dir: "datasets/export"
+  # Supported formats: alpaca | chatml
+  default_format: "alpaca"

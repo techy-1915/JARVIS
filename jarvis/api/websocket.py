@@ -1,6 +1,5 @@
 """WebSocket manager for real-time JARVIS updates."""
 
-import json
 import logging
 from typing import Any, Dict, List, Set
 

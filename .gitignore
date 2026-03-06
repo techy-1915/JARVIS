@@ -49,3 +49,9 @@ Thumbs.db
 # Distribution
 *.whl
 *.tar.gz
+
+# Training dataset exports (generated at runtime)
+datasets/export/
+
+# Fine-tuned model weights (large binary files)
+models/

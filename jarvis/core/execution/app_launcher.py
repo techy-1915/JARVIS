@@ -3,7 +3,6 @@
 import asyncio
 import logging
 import shutil
-import sys
 from typing import Any, Dict, List, Optional
 
 from ..security.permissions import Permission, PermissionManager

@@ -1,10 +1,10 @@
 """Main execution coordinator for JARVIS."""
 
 import logging
-from typing import Any, Dict, Optional
+from typing import Any, Dict
 
 from ..security.confirmation import ConfirmationManager
-from ..security.permissions import Permission, PermissionManager
+from ..security.permissions import PermissionManager
 from ..security.validator import CommandValidator
 from .action_logger import ActionLogger
 from .app_launcher import AppLauncher

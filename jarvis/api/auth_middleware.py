@@ -4,7 +4,7 @@ import logging
 from typing import Optional
 
 from fastapi import HTTPException, Request, status
-from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
+from fastapi.security import HTTPBearer
 
 from ..core.security.auth import AuthManager
 

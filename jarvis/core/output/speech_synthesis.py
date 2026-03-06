@@ -1,8 +1,6 @@
 """Speech synthesis – converts text to audio using TTS."""
 
 import logging
-from pathlib import Path
-from typing import Optional
 
 logger = logging.getLogger(__name__)
 

@@ -5,7 +5,7 @@ import importlib.util
 import logging
 import sys
 from pathlib import Path
-from typing import Dict, List, Optional, Type
+from typing import Dict, List, Optional
 
 from .tool_base import ToolBase
 
