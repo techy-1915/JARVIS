@@ -1,6 +1,5 @@
 """Tests for the JARVIS memory modules."""
 
-import pytest
 from jarvis.core.memory.short_term_memory import ShortTermMemory
 from jarvis.core.memory.knowledge_memory import KnowledgeMemory
 from jarvis.core.memory.embedding_manager import EmbeddingManager

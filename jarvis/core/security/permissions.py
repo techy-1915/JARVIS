@@ -2,7 +2,7 @@
 
 import logging
 from enum import Enum
-from typing import Dict, Set
+from typing import Set
 
 logger = logging.getLogger(__name__)
 

@@ -1,6 +1,5 @@
 """Tests for the JARVIS output modules."""
 
-import pytest
 from jarvis.core.output.text_formatter import TextFormatter
 from jarvis.core.output.response_manager import ResponseManager
 

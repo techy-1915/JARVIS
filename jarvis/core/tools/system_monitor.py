@@ -1,7 +1,6 @@
 """System monitor tool – exposes OS-level metrics."""
 
 import logging
-import os
 import platform
 from typing import Any, Dict
 
