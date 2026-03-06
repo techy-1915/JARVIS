@@ -48,13 +48,26 @@ class CommanderAgent(AgentBase):
             response = await self._brain.think(user_input, self._context)
             self._context.append({"role": "assistant", "content": response})
 
+    # Parse JSON response from LLM
+            import json
+            try:
+                parsed = json.loads(response)
+        # Extract just the response text from the JSON
+                if isinstance(parsed, dict) and "response" in parsed:
+                    actual_response = parsed["response"]
+                else:
+                    actual_response = response  # Fallback to raw if not in expected format
+            except (json.JSONDecodeError, ValueError):
+        # If it's not valid JSON, use the raw response
+                actual_response = response
+
             await self._bus.publish(
                 Message(
                     message_type=MessageType.EVENT,
                     sender=self.name,
-                    payload={"input": user_input, "response": response},
+                    payload={"input": user_input, "response": actual_response},
                 )
             )
-            return self._success({"response": response})
+            return self._success({"response": actual_response})
         except Exception as exc:  # noqa: BLE001
             return self._error("Commander failed to process request", exc)
