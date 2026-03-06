@@ -19,8 +19,8 @@ class LocalLLM(BrainInterface):
 
     def __init__(
         self,
-        base_url: str = "http://localhost:11434",
-        model: str = "llama3",
+        base_url: str = None,
+        model: str = None,
         timeout: float = 120.0,
     ) -> None:
         """Initialise the LocalLLM client.
@@ -30,6 +30,14 @@ class LocalLLM(BrainInterface):
             model: Name of the Ollama model to use.
             timeout: HTTP request timeout in seconds.
         """
+        import os
+    
+        # Read from environment variables if not provided
+        if base_url is None:
+            base_url = os.getenv("OLLAMA_BASE_URL", "http://localhost:11434")
+        if model is None:
+            model = os.getenv("OLLAMA_MODEL", "llama3.1:8b")
+    
         self.base_url = base_url.rstrip("/")
         self.model = model
         self.timeout = timeout
