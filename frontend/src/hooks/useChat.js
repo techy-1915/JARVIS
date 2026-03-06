@@ -18,21 +18,17 @@ export function useChat({ getOrCreateActive, addMessage, addLog }) {
     setIsTyping(true);
     try {
       const data = await sendMessage(text, convId);
-      
-      // Handle different response formats from the backend
-      let responseText;
-      if (typeof data === 'string') {
-        responseText = data;
-      } else if (data.response) {
-        responseText = data.response;
-      } else if (data.result?.response) {
-        responseText = data.result.response;
-      } else {
-        // If we still get raw JSON, stringify it (fallback)
-        responseText = JSON.stringify(data, null, 2);
-      }
-      
-      const assistantMsg = { id: uuidv4(), role: 'assistant', content: responseText, timestamp: Date.now() };
+
+      // Handle response - it should now be clean text, not JSON
+      const responseText = data.response || data;
+
+      const assistantMsg = {
+        id: uuidv4(),
+        role: 'assistant',
+        content: responseText,
+        timestamp: Date.now(),
+      };
+
       addMessage(convId, assistantMsg);
       addLog?.({ level: 'success', message: `Response received`, timestamp: Date.now() });
     } catch (err) {
