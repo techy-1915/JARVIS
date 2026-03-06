@@ -6,6 +6,8 @@ import { useConversations } from './hooks/useConversations';
 import { useChat } from './hooks/useChat';
 import { getStatus } from './services/api';
 
+const MAX_LOGS = 200;
+
 export default function App() {
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [rightPanelOpen, setRightPanelOpen] = useState(false);
@@ -13,7 +15,7 @@ export default function App() {
   const [apiStatus, setApiStatus] = useState('checking');
 
   const addLog = useCallback((log) => {
-    setLogs((prev) => [...prev.slice(-199), log]);
+    setLogs((prev) => [...prev.slice(-(MAX_LOGS - 1)), log]);
   }, []);
 
   const { status: wsStatus } = useWebSocket(

@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { truncate, formatDate } from '../../utils/formatters';
+import { truncate } from '../../utils/formatters';
 
 export default function ConversationItem({ conv, isActive, onSelect, onRename, onDelete }) {
   const [editing, setEditing] = useState(false);
@@ -53,7 +53,11 @@ export default function ConversationItem({ conv, isActive, onSelect, onRename, o
           </svg>
         </button>
         <button
-          onClick={() => onDelete(conv.id)}
+          onClick={() => {
+            if (window.confirm(`Delete "${conv.title}"? This cannot be undone.`)) {
+              onDelete(conv.id);
+            }
+          }}
           className="p-0.5 rounded hover:text-[#f85149]"
           title="Delete"
         >

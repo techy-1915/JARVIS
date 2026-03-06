@@ -1,5 +1,7 @@
 import React, { useState, useRef, useCallback } from 'react';
 
+const MAX_TEXTAREA_HEIGHT = 200;
+
 export default function ChatInput({ onSend, disabled }) {
   const [value, setValue] = useState('');
   const textareaRef = useRef(null);
@@ -25,7 +27,7 @@ export default function ChatInput({ onSend, disabled }) {
     const ta = textareaRef.current;
     if (ta) {
       ta.style.height = 'auto';
-      ta.style.height = Math.min(ta.scrollHeight, 200) + 'px';
+      ta.style.height = Math.min(ta.scrollHeight, MAX_TEXTAREA_HEIGHT) + 'px';
     }
   };
 
@@ -41,7 +43,7 @@ export default function ChatInput({ onSend, disabled }) {
           placeholder="Message JARVIS... (Enter to send, Shift+Enter for new line)"
           rows={1}
           className="flex-1 bg-transparent text-[#e6edf3] text-sm resize-none outline-none placeholder-[#8b949e] leading-relaxed"
-          style={{ maxHeight: '200px' }}
+          style={{ maxHeight: `${MAX_TEXTAREA_HEIGHT}px` }}
         />
         <button
           onClick={handleSend}

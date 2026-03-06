@@ -2,7 +2,7 @@ import { useState, useCallback } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 import { sendMessage } from '../services/api';
 
-export function useChat({ activeId, getOrCreateActive, addMessage, addLog }) {
+export function useChat({ getOrCreateActive, addMessage, addLog }) {
   const [isTyping, setIsTyping] = useState(false);
   const [error, setError] = useState(null);
 
