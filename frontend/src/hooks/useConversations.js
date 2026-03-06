@@ -1,6 +1,7 @@
 import { useState, useCallback } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 import { loadConversations, saveConversations } from '../services/storage';
+import { truncate } from '../utils/formatters';
 
 export function useConversations() {
   const [conversations, setConversations] = useState(() => loadConversations());
@@ -30,7 +31,7 @@ export function useConversations() {
         if (c.id !== convId) return c;
         const msgs = [...c.messages, message];
         const title = c.title === 'New Chat' && message.role === 'user'
-          ? message.content.slice(0, 40)
+          ? truncate(message.content)
           : c.title;
         return { ...c, messages: msgs, title, updatedAt: Date.now() };
       });
