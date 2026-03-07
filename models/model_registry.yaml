@@ -1,0 +1,5 @@
+models:
+  - version: "1.0.0"
+    name: "llama3.1:8b"
+    type: "base"
+    created: "2026-03-07"

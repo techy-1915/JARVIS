@@ -21,7 +21,27 @@ logger = logging.getLogger(__name__)
 async def lifespan(app: FastAPI) -> AsyncGenerator[None, None]:
     """Server startup and shutdown lifecycle."""
     logger.info("JARVIS API server starting up")
+
+    # Start the autonomous self-learning loop as a background task
+    try:
+        from jarvis.core.learning.self_learning_loop import get_self_learning_loop
+
+        learning_loop = get_self_learning_loop()
+        learning_loop.start()
+        logger.info("Self-learning loop started in background")
+    except Exception as exc:  # noqa: BLE001
+        logger.warning("Could not start self-learning loop: %s", exc)
+
     yield
+
+    # Stop the learning loop on shutdown
+    try:
+        from jarvis.core.learning.self_learning_loop import get_self_learning_loop
+
+        get_self_learning_loop().stop()
+    except Exception:  # noqa: BLE001
+        pass
+
     logger.info("JARVIS API server shutting down")
 
 

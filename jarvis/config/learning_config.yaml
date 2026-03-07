@@ -1,0 +1,33 @@
+vector_memory:
+  provider: "chromadb"  # or "faiss"
+  persist_directory: "data/vector_db"
+  embedding_model: "all-MiniLM-L6-v2"
+  collection_name: "jarvis_memory"
+
+conversation_logging:
+  enabled: true
+  storage_path: "training/datasets"
+  format: "jsonl"
+  rotation: "daily"
+
+feedback:
+  storage_type: "sqlite"
+  database_path: "data/feedback/feedback.db"
+  implicit_scoring: true
+
+auto_dataset:
+  enabled: true
+  min_quality_score: 0.7
+  deduplication: true
+  similarity_threshold: 0.9
+
+learning_loop:
+  enabled: true
+  interval_hours: 24
+  min_conversations: 100
+  improvement_threshold: 0.05
+
+training:
+  auto_train: false  # set true to enable automatic LoRA training
+  config_path: "training/config/lora_config.yaml"
+  output_path: "models/lora_adapters"
