@@ -26,12 +26,29 @@ openai>=1.14.0           # OpenAI-compatible API client (also works with Ollama)
 
 # NLP / ML (optional, for future custom model)
 # torch>=2.2.0
-# transformers>=4.38.0
+# transformers>=4.48.0       # 4.48.0+ required (fixes deserialization vulnerability)
 # numpy>=1.26.0
 
 # Vector database (choose one)
-# chromadb>=0.4.22           # Uncomment for ChromaDB
+# chromadb>=0.4.22           # Uncomment for ChromaDB vector memory
 # faiss-cpu>=1.7.4           # Uncomment for FAISS
+
+# Sentence embeddings (for vector memory)
+# sentence-transformers>=2.7.0   # Uncomment for semantic similarity
+
+# Fine-tuning (optional)
+# peft>=0.10.0               # LoRA/QLoRA adapters
+# bitsandbytes>=0.43.0       # 4-bit quantization
+# accelerate>=0.29.0         # Distributed training
+# datasets>=2.18.0           # HuggingFace datasets
+# trl>=0.8.0                 # SFTTrainer for fine-tuning
+
+# Data processing
+# scikit-learn>=1.4.0        # Clustering for knowledge consolidation
+# pandas>=2.2.0              # Data manipulation
+
+# Configuration
+pyyaml>=6.0
 
 # Browser automation
 # selenium>=4.18.0           # Uncomment for browser control

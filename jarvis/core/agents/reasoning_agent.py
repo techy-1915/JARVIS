@@ -35,9 +35,33 @@ class ReasoningAgent(AgentBase):
         if not problem:
             return self._error("No problem provided")
 
+        # Retrieve relevant memories to augment the prompt
+        memory_context = ""
+        try:
+            from ..memory.vector_memory import get_vector_memory
+
+            vm = get_vector_memory()
+            memories = await vm.retrieve_similar(problem, top_k=3)
+            if memories:
+                memory_context = "\n".join(m["text"] for m in memories)
+                logger.debug(
+                    "Retrieved %d memory snippets for reasoning", len(memories)
+                )
+        except Exception as exc:  # noqa: BLE001
+            logger.debug("Vector memory retrieval skipped: %s", exc)
+
+        # Build enhanced prompt
+        if memory_context:
+            enhanced_problem = (
+                f"Context from memory:\n{memory_context}\n\nProblem: {problem}"
+            )
+        else:
+            enhanced_problem = problem
+
         try:
             raw = await self._brain.think(
-                problem, [{"role": "system", "content": REASONING_PROMPT}]
+                enhanced_problem,
+                [{"role": "system", "content": REASONING_PROMPT}],
             )
             reasoning, conclusion = "", raw
             if "CONCLUSION:" in raw:

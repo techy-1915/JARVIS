@@ -54,4 +54,6 @@ Thumbs.db
 datasets/export/
 
 # Fine-tuned model weights (large binary files)
-models/
+models/lora_adapters/
+models/*.bin
+models/*.safetensors
