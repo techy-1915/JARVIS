@@ -80,7 +80,7 @@ class AIBrain:
                 async with session.post(
                     f"{self.ollama_url}/api/chat",
                     json=payload,
-                    timeout=aiohttp.ClientTimeout(total=60),
+                    timeout=aiohttp.ClientTimeout(total=300),
                 ) as response:
                     if response.status != 200:
                         error_text = await response.text()
@@ -99,7 +99,7 @@ class AIBrain:
                 "Please ensure Ollama is running on port 11434."
             )
         except Exception as exc:  # noqa: BLE001
-            logger.error("Unexpected error: %s", exc)
+            logger.error("Unexpected error: %s", exc, exc_info=True)
             return f"An unexpected error occurred: {exc}"
 
     async def _generate_stream(self, payload: Dict[str, Any]) -> AsyncIterator[str]:
@@ -109,8 +109,9 @@ class AIBrain:
                 async with session.post(
                     f"{self.ollama_url}/api/chat",
                     json=payload,
-                    timeout=aiohttp.ClientTimeout(total=120),
+                    timeout=aiohttp.ClientTimeout(total=300),
                 ) as response:
+                    buffer = ""
                     async for line in response.content:
                         if line:
                             try:
@@ -119,10 +120,11 @@ class AIBrain:
                                     content = chunk["message"].get("content", "")
                                     if content:
                                         yield content
-                            except json.JSONDecodeError:
+                            except json.JSONDecodeError as e:
+                                logger.warning("JSON decode error for chunk: {line[:100]}... Error: {e}", exc_info=True)
                                 continue
         except Exception as exc:  # noqa: BLE001
-            logger.error("Streaming error: %s", exc)
+            logger.error("Streaming error: %s", exc, exc_info=True)
             yield f"[Streaming error: {exc}]"
 
     def extract_code_blocks(self, text: str) -> List[Dict[str, str]]:
@@ -155,4 +157,5 @@ class AIBrain:
                 ) as response:
                     return response.status == 200
         except Exception:  # noqa: BLE001
+            logger.error("Health check error", exc_info=True)
             return False
