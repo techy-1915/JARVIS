@@ -7,7 +7,7 @@ from typing import AsyncGenerator
 from fastapi import FastAPI, WebSocket, WebSocketDisconnect
 from fastapi.middleware.cors import CORSMiddleware
 
-from .routes import chat, memory, models, status, tasks, training, voice
+from .routes import auth, chat, memory, models, status, tasks, training, voice
 from .websocket import ws_manager
 
 logging.basicConfig(
@@ -63,6 +63,7 @@ app.add_middleware(
 
 # Register route modules
 app.include_router(status.router)
+app.include_router(auth.router)
 app.include_router(chat.router)
 app.include_router(voice.router)
 app.include_router(tasks.router)

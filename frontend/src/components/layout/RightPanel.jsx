@@ -1,5 +1,5 @@
 import React from 'react';
-import EventLog from '../logs/EventLog';
+import EventLog from '../events/EventLog';
 
 export default function RightPanel({ isOpen, logs }) {
   return (
