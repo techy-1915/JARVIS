@@ -1,0 +1,67 @@
+# Provider configuration for the JARVIS AI routing system
+# Supports environment variable substitution: ${VAR_NAME}
+
+providers:
+  gemini:
+    priority: 1
+    api_key: ${GEMINI_API_KEY}
+    model: "gemini-1.5-pro"
+    daily_limit: 1000
+    rate_limit: "60/min"
+    temperature: 0.7
+    max_output_tokens: 2048
+    suitable_for: ["reasoning", "normal_chat", "embeddings"]
+
+  groq:
+    priority: 2
+    api_key: ${GROQ_API_KEY}
+    model: "llama3-70b-8192"
+    daily_limit: 500
+    rate_limit: "30/min"
+    temperature: 0.7
+    max_tokens: 2048
+    suitable_for: ["code_generation", "normal_chat"]
+
+  openrouter:
+    priority: 3
+    api_key: ${OPENROUTER_API_KEY}
+    model: "anthropic/claude-3-haiku"
+    daily_limit: 300
+    rate_limit: "20/min"
+    temperature: 0.7
+    max_tokens: 2048
+    suitable_for: ["reasoning", "normal_chat", "code_generation"]
+
+  phi3:
+    priority: 4
+    type: "local"
+    ollama_model: "phi3"
+    ollama_url: "http://localhost:11434"
+    temperature: 0.7
+    suitable_for: ["reasoning", "normal_chat"]
+
+  deepseek:
+    priority: 5
+    type: "local"
+    ollama_model: "deepseek-coder:6.7b"
+    ollama_url: "http://localhost:11434"
+    temperature: 0.3
+    suitable_for: ["code_generation"]
+
+  mistral:
+    priority: 6
+    type: "local"
+    ollama_model: "mistral"
+    ollama_url: "http://localhost:11434"
+    temperature: 0.5
+    suitable_for: ["normal_chat", "reasoning"]
+
+task_routing:
+  code_generation:
+    preferred: ["groq", "deepseek"]
+  reasoning:
+    preferred: ["gemini", "phi3"]
+  normal_chat:
+    preferred: ["gemini", "openrouter", "mistral"]
+  embeddings:
+    preferred: ["gemini"]
