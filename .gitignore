@@ -57,3 +57,4 @@ datasets/export/
 models/lora_adapters/
 models/*.bin
 models/*.safetensors
+logs/

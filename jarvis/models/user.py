@@ -157,7 +157,9 @@ class UserStore:
     """
 
     def __init__(self, db_path: Optional[str] = None) -> None:
-        import threading, json, pathlib
+        import json
+        import pathlib
+        import threading
 
         self._lock = threading.Lock()
         self._db_path = db_path or os.environ.get(
@@ -238,7 +240,8 @@ class UserStore:
     # ------------------------------------------------------------------
 
     def _load(self) -> None:
-        import json, pathlib
+        import json
+        import pathlib
         path = pathlib.Path(self._db_path)
         if not path.exists():
             return
@@ -254,7 +257,8 @@ class UserStore:
             logger.warning("Could not load user database: %s", exc)
 
     def _save(self) -> None:
-        import json, pathlib
+        import json
+        import pathlib
         path = pathlib.Path(self._db_path)
         path.parent.mkdir(parents=True, exist_ok=True)
         try:

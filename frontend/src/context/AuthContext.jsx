@@ -36,11 +36,13 @@ export function AuthProvider({ children }) {
     }
   }, [user]);
 
-  // Verify token on mount (re-validate stored session)
+  // Verify token on mount only – read the token value directly from localStorage
+  // to avoid re-running whenever token state changes (would cause an infinite loop).
   useEffect(() => {
-    if (!token) return;
+    const storedToken = localStorage.getItem(TOKEN_KEY);
+    if (!storedToken) return;
     fetch(`${API_BASE_URL}/api/auth/verify`, {
-      headers: { Authorization: `Bearer ${token}` },
+      headers: { Authorization: `Bearer ${storedToken}` },
     })
       .then((res) => {
         if (!res.ok) {
@@ -51,7 +53,7 @@ export function AuthProvider({ children }) {
       .catch(() => {
         // Network failure – keep the stored state to allow offline use
       });
-  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+  }, []); // intentionally run only on mount
 
   const login = useCallback(async (email, password) => {
     setLoading(true);
