@@ -1,6 +1,7 @@
 import React from 'react';
 import { MODEL_NAME, APP_VERSION } from '../../config';
 import SystemStatus from '../status/SystemStatus';
+import UserMenu from './UserMenu';
 
 export default function NavigationBar({ wsStatus, apiStatus, onToggleSidebar, onToggleRightPanel }) {
   return (
@@ -27,6 +28,7 @@ export default function NavigationBar({ wsStatus, apiStatus, onToggleSidebar, on
           {MODEL_NAME}
         </span>
         <SystemStatus wsStatus={wsStatus} apiStatus={apiStatus} />
+        <UserMenu />
         <button
           onClick={onToggleRightPanel}
           className="p-1.5 rounded hover:bg-[#30363d] text-[#8b949e] hover:text-[#e6edf3] transition-colors"
