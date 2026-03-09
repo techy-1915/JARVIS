@@ -123,7 +123,7 @@ class AIRouter:
             )
             try:
                 start = time.monotonic()
-                response = await provider.generate(prompt, **kwargs)
+                response = await provider.generate(prompt, task_type=task_type.value, **kwargs)
                 latency = time.monotonic() - start
 
                 self._tracker.increment(provider.name)

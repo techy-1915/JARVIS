@@ -3,6 +3,7 @@
 import logging
 from typing import Any, Dict, Optional
 
+from ..ai_router.system_prompts import get_system_prompt
 from .base_provider import BaseProvider, ProviderError
 
 logger = logging.getLogger(__name__)
@@ -37,9 +38,14 @@ class DeepSeekProvider(BaseProvider):
             raise ProviderError("aiohttp is required for DeepSeekProvider") from exc
 
         temperature = kwargs.get("temperature", self.config.get("temperature", 0.3))
+        task_type = kwargs.get("task_type", "code_generation")
+        system_prompt = get_system_prompt(task_type)
         payload = {
             "model": self._model,
-            "messages": [{"role": "user", "content": prompt}],
+            "messages": [
+                {"role": "system", "content": system_prompt},
+                {"role": "user", "content": prompt},
+            ],
             "stream": False,
             "options": {"temperature": temperature},
         }
